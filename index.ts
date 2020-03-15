@@ -1,19 +1,21 @@
 "use strict";
-function v(id : string) {
+
+function v(id: string) {
     var el = document.getElementById(id);
     if (!(el instanceof HTMLInputElement)) {
         return "";
     }
     return el.value;
 }
-function vs(id) {
+
+function vs(id: string) {
     var val = v(id);
     if (val) {
         val = " " + val;
     }
     return val;
 }
-function c(id, valueOn, valueOff) {
+function c(id: string, valueOn: string, valueOff: string): string {
     var element = document.getElementById(id);
     if (!(element instanceof HTMLInputElement)) {
         return "";
@@ -48,7 +50,7 @@ function vv(id) {
     if (!val) {
         return "";
     }
-    return " " + id.toUpperCase() + "=\"" + val + "\"";
+    return " " + id.toUpperCase() + '="' + val + '"';
 }
 function regenerate() {
     var config = v("configure");
@@ -63,7 +65,11 @@ function regenerate() {
     cflags += cs("optimized", "-O2", "-O0");
     config += cs("with-system-readline");
     cxxflags += cs("optimized", "-O2", "-O0");
-    for (var _i = 0, _a = ["binutils", "gold", "ld", "gprof", "gas"]; _i < _a.length; _i++) {
+    for (
+        var _i = 0, _a = ["binutils", "gold", "ld", "gprof", "gas"];
+        _i < _a.length;
+        _i++
+    ) {
         var tool = _a[_i];
         config += cs("disable-" + tool);
     }
@@ -89,7 +95,7 @@ function regenerate() {
     }
     textarea.value = config;
 }
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     var els = document.getElementsByTagName("input");
     for (var i = 0; i < els.length; i++) {
         var el = els.item(i);
