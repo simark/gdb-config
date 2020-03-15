@@ -70,6 +70,7 @@ function regenerate() {
     }
     config += vf("target");
     config += vf("enable-targets");
+    config += vf("with-expat");
     config += vf("with-python");
     config += vf("with-guile");
     config += cs("with-intel-pt");
