@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <style>
+      td:first-child,
+      th:first-child {
+        /*text-align: right;*/
+      }
+      td:nth-child(2) {
+        font-family: monospace;
+      }
+    </style>
+    <script src="./index.js"></script>
+  </head>
+  <body>
+    <textarea rows="8" cols="80" id="result"></textarea>
+    <table>
+      <tr>
+        <th>Options</th>
+        <th>Flag</th>
+      </tr>
+      <tr>
+        <td><label for="configure">Path to configure</label></td>
+        <td></td>
+        <td><input type="text" id="configure" value="~/src/binutils-gdb/configure" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="cc">C Compiler</label></td>
+        <td>CC</td>
+        <td><input type="text" id="cc" value="ccache gcc" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="cxx">C++ Compiler</label></td>
+        <td>CXX</td>
+        <td><input type="text" id="cxx" value="ccache g++" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="use-gold">Use gold linker</label></td>
+        <td>LDFLAGS += -fuse-gold=gold</td>
+        <td><input type="checkbox" id="use-gold" checked="checked" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="debuginfo">Debug info</label></td>
+        <td>C(XX)FLAGS += -g3</td>
+        <td><input type="checkbox" id="debuginfo" checked="checked" /></td>
+      </tr>
+      <tr>
+        <td><label for="optmimized">Optimized</label></td>
+        <td>C(XX)FLAGS += -O2/-O0</td>
+        <td><input type="checkbox" id="optimized" /></td>
+      </tr>
+      <tr>
+        <td><label for="with-system-readline">With system readline</label></td>
+        <td>--with-system-readline</td>
+        <td><input type="checkbox" id="with-system-readline" checked="checked" /></td>
+      </tr>
+      <tr>
+        <td><label for="disable-binutils">Disable binutils</label></td>
+        <td>--disable-binutils</td>
+        <td><input type="checkbox" id="disable-binutils" /></td>
+      </tr>
+      <tr>
+        <td><label for="disable-gold">Disable gold</label></td>
+        <td>--disable-gold</td>
+        <td><input type="checkbox" id="disable-gold" checked="checked" /></td>
+      </tr>
+      <tr>
+        <td><label for="disable-ld">Disable ld</label></td>
+        <td>--disable-ld</td>
+        <td><input type="checkbox" id="disable-ld" checked="checked" /></td>
+      </tr>
+      <tr>
+        <td><label for="disable-gprof">Disable gprof</label></td>
+        <td>--disable-gprof</td>
+        <td><input type="checkbox" id="disable-gprof" checked="checked" /></td>
+      </tr>
+      <tr>
+        <td><label for="disable-gas">Disable gas</label></td>
+        <td>--disable-gas</td>
+        <td><input type="checkbox" id="disable-gas" checked="checked" /></td>
+      </tr>
+      <tr>
+        <td><label for="target">Target</label></td>
+        <td>--target</td>
+        <td><input type="text" id="target" /></td>
+      </tr>
+      <tr>
+        <td><label for="enable-targets">Enable targets</label></td>
+        <td>--enable-targets</td>
+        <td><input type="text" id="enable-targets" value="all" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="with-python">Python</label></td>
+        <td>--with-python</td>
+        <td><input type="text" id="with-python" value="python3" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="with-guile">With guile</label></td>
+        <td>--with-guile</td>
+        <td><input type="text" id="with-guile" value="guile-2.0" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="with-intel-pt">With <a href="https://github.com/01org/processor-trace">Intel PT</a></label></td>
+        <td>--with-intel-pt</td>
+        <td><input type="checkbox" id="with-intel-pt" checked="checked" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="with-babeltrace">With <a href="http://diamon.org/babeltrace/">Babeltrace</a></label></td>
+        <td>--with-babeltrace</td>
+        <td><input type="checkbox" id="with-babeltrace" checked="checked" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="sanitize-address">With AddressSanitizer</label></td>
+	<td>{C,CXX,LD}FLAGS += -fsanitize=address</td>
+        <td><input type="checkbox" id="sanitize-address" checked="checked" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="glibcxx-debug">With libstdc++ debug</label></td>
+        <td>CXXFLAGS += -D_GLIBCXX_DEBUG=1</td>
+        <td><input type="checkbox" id="glibcxx-debug" checked="checked" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="additional-cflags">Additional CFLAGS</label></td>
+        <td>CFLAGS</td>
+        <td><input type="text" id="additional-cflags" value="" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="additional-cxxflags">Additional CXXFLAGS</label></td>
+        <td>CXXFLAGS</td>
+        <td><input type="text" id="additional-cxxflags" value="" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="additional-ldflags">Additional LDFLAGS</label></td>
+        <td>LDFLAGS</td>
+        <td><input type="text" id="additional-ldflags" value="" /></label></td>
+      </tr>
+    </table>
+  </body>
+</html>
