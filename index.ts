@@ -1,7 +1,7 @@
 "use strict";
 
 function v(id: string) {
-    var el = document.getElementById(id);
+    const el = document.getElementById(id);
     if (!(el instanceof HTMLInputElement)) {
         return "";
     }
@@ -9,14 +9,14 @@ function v(id: string) {
 }
 
 function vs(id: string) {
-    var val = v(id);
+    let val = v(id);
     if (val) {
         val = " " + val;
     }
     return val;
 }
-function c(id: string, valueOn: string, valueOff: string): string {
-    var element = document.getElementById(id);
+function c(id: string, valueOn?: string, valueOff?: string): string {
+    const element = document.getElementById(id);
     if (!(element instanceof HTMLInputElement)) {
         return "";
     }
@@ -25,38 +25,38 @@ function c(id: string, valueOn: string, valueOff: string): string {
     }
     return valueOn || "--" + id;
 }
-function cs(id, valueOn, valueOff) {
-    var val = c(id, valueOn, valueOff);
+function cs(id: string, valueOn?: string, valueOff?: string): string {
+    const val = c(id, valueOn, valueOff);
     if (!val) {
         return "";
     }
     return " " + val;
 }
-function rs(val) {
+function rs(val: string): string {
     while (val.charAt(0) === " ") {
         val = val.substring(1);
     }
     return val;
 }
-function vf(id) {
-    var val = v(id);
+function vf(id: string): string {
+    const val = v(id);
     if (!val) {
         return "";
     }
     return " --" + id + "=" + val;
 }
-function vv(id) {
-    var val = v(id);
+function vv(id: string): string {
+    const val = v(id);
     if (!val) {
         return "";
     }
     return " " + id.toUpperCase() + '="' + val + '"';
 }
 function regenerate() {
-    var config = v("configure");
-    var cflags = "";
-    var cxxflags = "";
-    var ldflags = "";
+    let config = v("configure");
+    let cflags = "";
+    let cxxflags = "";
+    let ldflags = "";
     config += vv("cc");
     config += vv("cxx");
     ldflags += cs("use-gold", "-fuse-ld=gold");
@@ -65,12 +65,7 @@ function regenerate() {
     cflags += cs("optimized", "-O2", "-O0");
     config += cs("with-system-readline");
     cxxflags += cs("optimized", "-O2", "-O0");
-    for (
-        var _i = 0, _a = ["binutils", "gold", "ld", "gprof", "gas"];
-        _i < _a.length;
-        _i++
-    ) {
-        var tool = _a[_i];
+    for (const tool of ["binutils", "gold", "ld", "gprof", "gas"]) {
         config += cs("disable-" + tool);
     }
     config += vf("target");
@@ -89,19 +84,22 @@ function regenerate() {
     config += cflags ? ' CFLAGS="' + rs(cflags) + '"' : "";
     config += cxxflags ? ' CXXFLAGS="' + rs(cxxflags) + '"' : "";
     config += ldflags ? ' LDFLAGS="' + rs(ldflags) + '"' : "";
-    var textarea = document.getElementById("result");
+    const textarea = document.getElementById("result");
     if (!(textarea instanceof HTMLTextAreaElement)) {
         return;
     }
     textarea.value = config;
 }
-document.addEventListener("DOMContentLoaded", function() {
-    var els = document.getElementsByTagName("input");
-    for (var i = 0; i < els.length; i++) {
-        var el = els.item(i);
+document.addEventListener("DOMContentLoaded", (event: Event) => {
+    const els = document.getElementsByTagName("input");
+    for (let i = 0; i < els.length; i++) {
+        const el = els.item(i);
+        if (!el) {
+            continue;
+        }
+
         el.onchange = regenerate;
         el.onkeyup = regenerate;
     }
     regenerate();
 });
-//# sourceMappingURL=index.js.map
