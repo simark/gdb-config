@@ -64,6 +64,7 @@ function regenerate() {
     cxxflags += cs("debuginfo", "-g3");
     cflags += cs("optimized", "-O2", "-O0");
     config += cs("with-system-readline");
+    config += cs("with-system-zlib");
     cxxflags += cs("optimized", "-O2", "-O0");
     for (const tool of ["binutils", "gold", "ld", "gprof", "gas"]) {
         config += cs("disable-" + tool);
@@ -75,6 +76,7 @@ function regenerate() {
     config += vf("with-guile");
     config += cs("with-intel-pt");
     config += cs("with-babeltrace");
+    config += cs("disable-nls");
     cflags += cs("sanitize-address", "-fsanitize=address");
     cxxflags += cs("sanitize-address", "-fsanitize=address");
     ldflags += cs("sanitize-address", "-fsanitize=address");
