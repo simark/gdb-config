@@ -84,6 +84,11 @@
         <td><input type="checkbox" id="disable-gas" checked="checked" /></td>
       </tr>
       <tr>
+        <td><label for="disable-sim">Disable sim</label></td>
+        <td>--disable-sim</td>
+        <td><input type="checkbox" id="disable-sim" /></td>
+      </tr>
+      <tr>
         <td><label for="target">Target</label></td>
         <td>--target</td>
         <td><input type="text" id="target" /></td>
@@ -119,6 +124,16 @@
         <td><input type="checkbox" id="with-babeltrace" checked="checked" /></label></td>
       </tr>
       <tr>
+        <td><label for="with-debuginfod">With <a href="https://sourceware.org/elfutils/Debuginfod.html">debuginfod</a></label></td>
+        <td>--with-debuginfod</td>
+        <td><input type="checkbox" id="with-debuginfod" checked="checked" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="enable-libctf">Enable CTF (Compact C Type Format) support</label></td>
+        <td>--enable-libctf</td>
+        <td><input type="checkbox" id="enable-libctf" checked="checked" /></td>
+      </tr>
+      <tr>
         <td><label for="disable-nls">Disable internationalization</label></td>
         <td>--disable-nls</td>
         <td><input type="checkbox" id="disable-nls" /></td>
@@ -132,6 +147,16 @@
         <td><label for="glibcxx-debug">With libstdc++ debug</label></td>
         <td>CXXFLAGS += -D_GLIBCXX_DEBUG=1</td>
         <td><input type="checkbox" id="glibcxx-debug" checked="checked" /></label></td>
+      </tr>
+      <tr>
+        <td><label for="max-errors">Max compiler errors</label></td>
+        <td>-fmax-errors / -ferror-limit</td>
+        <td><input type="text" id="max-errors" value="1" /></td>
+      </tr>
+      <tr>
+        <td><label for="diagnostics-color-always">Always use diagnostic colors</label></td>
+        <td>-fdiagnostics-color=always</td>
+        <td><input type="checkbox" id="diagnostics-color-always" checked="checked" /></label></td>
       </tr>
       <tr>
         <td><label for="additional-cflags">Additional CFLAGS</label></td>

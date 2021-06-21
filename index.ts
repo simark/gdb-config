@@ -1,6 +1,6 @@
 "use strict";
 
-function v(id: string) {
+function v(id: string): string {
     const el = document.getElementById(id);
     if (!(el instanceof HTMLInputElement)) {
         return "";
@@ -66,7 +66,7 @@ function regenerate() {
     config += cs("with-system-readline");
     config += cs("with-system-zlib");
     cxxflags += cs("optimized", "-O2", "-O0");
-    for (const tool of ["binutils", "gold", "ld", "gprof", "gas"]) {
+    for (const tool of ["binutils", "gold", "ld", "gprof", "gas", "sim"]) {
         config += cs("disable-" + tool);
     }
     config += vf("target");
@@ -76,11 +76,25 @@ function regenerate() {
     config += vf("with-guile");
     config += cs("with-intel-pt");
     config += cs("with-babeltrace");
+    config += cs("with-debuginfod");
+    config += cs("enable-libctf");
     config += cs("disable-nls");
     cflags += cs("sanitize-address", "-fsanitize=address");
     cxxflags += cs("sanitize-address", "-fsanitize=address");
     ldflags += cs("sanitize-address", "-fsanitize=address");
     cxxflags += cs("glibcxx-debug", "-D_GLIBCXX_DEBUG=1");
+
+    const maxErrors = v("max-errors");
+    if (maxErrors.length > 0) {
+        const cflagsMaxErrorsFlag = v("cc").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
+        cflags += " " + cflagsMaxErrorsFlag + "=" + maxErrors;
+        const cxxflagsMaxErrorsFlag = v("cxx").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
+        cxxflags += " " + cxxflagsMaxErrorsFlag + "=" + maxErrors;
+    }
+
+    cflags += cs("diagnostics-color-always", "-fdiagnostics-color=always");
+    cxxflags += cs("diagnostics-color-always", "-fdiagnostics-color=always");
+
     cflags += vs("additional-cflags");
     cxxflags += vs("additional-cxxflags");
     ldflags += vs("additional-ldflags");
