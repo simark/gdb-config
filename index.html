@@ -27,6 +27,20 @@
       <td><input type="text" id="configure" value="~/src/binutils-gdb/configure" /></label></td>
     </tr>
     <tr>
+      <td>Silent rules</td>
+      <td></td>
+      <td>
+        <input type="radio" id="enable-silent-rules" name="silent-rules" checked="true" />
+        <label for="enable-silent-rules">Enable</label>
+
+        <input type="radio" id="disable-silent-rules" name="silent-rules" />
+        <label for="disable-silent-rules">Disable</label>
+
+        <input type="radio" id="auto-silent-rules" name="silent-rules" />
+        <label for="auto-silent-rules">Auto</label>
+      </td>
+    </tr>
+    <tr>
       <td><label for="cc">C Compiler</label></td>
       <td>CC</td>
       <td><input type="text" id="cc" value="ccache gcc" /></label></td>

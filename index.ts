@@ -15,7 +15,7 @@ function vs(id: string) {
     }
     return val;
 }
-function c(id: string, valueOn?: string, valueOff?: string): string {
+function checked(id: string, valueOn?: string, valueOff?: string): string {
     const element = document.getElementById(id);
     if (!(element instanceof HTMLInputElement)) {
         return "";
@@ -23,14 +23,14 @@ function c(id: string, valueOn?: string, valueOff?: string): string {
     if (!element.checked) {
         return valueOff || "";
     }
-    return valueOn || "--" + id;
+    return valueOn || " --" + id;
 }
 function cs(id: string, valueOn?: string, valueOff?: string): string {
-    const val = c(id, valueOn, valueOff);
+    const val = checked(id, valueOn, valueOff);
     if (!val) {
         return "";
     }
-    return " " + val;
+    return val;
 }
 function rs(val: string): string {
     while (val.charAt(0) === " ") {
@@ -59,6 +59,10 @@ function regenerate() {
     let ldflags = "";
     config += vv("cc");
     config += vv("cxx");
+
+    config += checked("enable-silent-rules");
+    config += checked("disable-silent-rules");
+
     ldflags += cs("use-gold", "-fuse-ld=gold");
     cflags += cs("debuginfo", "-g3");
     cxxflags += cs("debuginfo", "-g3");
