@@ -48,12 +48,26 @@
     <tr>
       <td><label for="cxx">C++ Compiler</label></td>
       <td>CXX</td>
-      <td><input type="text" id="cxx" value="ccache g++" /></label></td>
+      <td><input type="text" id="cxx" value="ccache g++" /></td>
+    </tr>
+    <tr>
+      <td>Enable -Werror</td>
+      <td>--{enable,disable}-werror</td>
+      <td>
+        <input type="radio" id="enable-werror" name="werror" />
+        <label for="enable-werror">Enable</label>
+
+        <input type="radio" id="disable-werror" name="werror" />
+        <label for="disable-werror">Disable</label>
+
+        <input type="radio" id="auto-werror" name="werror" checked="true" />
+        <label for="auto-werror">Auto</label>
+      </td>
     </tr>
     <tr>
       <td><label for="use-gold">Use gold linker</label></td>
       <td>LDFLAGS += -fuse-gold=gold</td>
-      <td><input type="checkbox" id="use-gold" checked="checked" /></label></td>
+      <td><input type="checkbox" id="use-gold" /></td>
     </tr>
     <tr>
       <td><label for="debuginfo">Debug info</label></td>

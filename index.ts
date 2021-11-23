@@ -71,6 +71,9 @@ function regenerate() {
     config += checked("enable-silent-rules");
     config += checked("disable-silent-rules");
 
+    config += checked("enable-werror");
+    config += checked("disable-werror");
+
     ldflags += cs("use-gold", "-fuse-ld=gold");
     cflags += cs("debuginfo", "-g3");
     cxxflags += cs("debuginfo", "-g3");
