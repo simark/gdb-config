@@ -21,9 +21,17 @@ function checked(id: string, valueOn?: string, valueOff?: string): string {
         return "";
     }
     if (!element.checked) {
-        return valueOff || "";
+      if (valueOff) {
+	return " " + valueOff;
+      } else {
+	return "";
+      }
     }
-    return valueOn || " --" + id;
+    if (valueOn) {
+      return " " + valueOn;
+    } else {
+      return " --" + id;
+    }
 }
 function cs(id: string, valueOn?: string, valueOff?: string): string {
     const val = checked(id, valueOn, valueOff);
