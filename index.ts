@@ -95,6 +95,7 @@ function regenerate() {
     config += cs("enable-libctf");
     config += cs("disable-nls");
     cflags += cs("sanitize-address", "-fsanitize=address");
+    config += cs("enable-ubsan");
     cxxflags += cs("sanitize-address", "-fsanitize=address");
     ldflags += cs("sanitize-address", "-fsanitize=address");
     cxxflags += cs("glibcxx-debug", "-D_GLIBCXX_DEBUG=1");
