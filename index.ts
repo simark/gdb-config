@@ -21,16 +21,16 @@ function checked(id: string, valueOn?: string, valueOff?: string): string {
         return "";
     }
     if (!element.checked) {
-      if (valueOff) {
-	return " " + valueOff;
-      } else {
-	return "";
-      }
+        if (valueOff) {
+            return " " + valueOff;
+        } else {
+            return "";
+        }
     }
     if (valueOn) {
-      return " " + valueOn;
+        return " " + valueOn;
     } else {
-      return " --" + id;
+        return " --" + id;
     }
 }
 function cs(id: string, valueOn?: string, valueOff?: string): string {
