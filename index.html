@@ -65,9 +65,21 @@
       </td>
     </tr>
     <tr>
-      <td><label for="use-gold">Use gold linker</label></td>
-      <td>LDFLAGS += -fuse-gold=gold</td>
-      <td><input type="checkbox" id="use-gold" /></td>
+      <td>Linker</td>
+      <td>LDFLAGS += -fuse-ld={bfd,gold,lld}</td>
+      <td>
+        <input type="radio" id="use-ld-default" name="use-ld" />
+        <label for="use-ld-bfd">default</label>
+
+        <input type="radio" id="use-ld-bfd" name="use-ld" />
+        <label for="use-ld-bfd">bfd</label>
+
+        <input type="radio" id="use-ld-lld" name="use-ld" checked="true" />
+        <label for="use-ld-lld">lld</label>
+
+        <input type="radio" id="use-ld-gold" name="use-ld" />
+        <label for="use-ld-gold">gold</label>
+      </td>
     </tr>
     <tr>
       <td><label for="debuginfo">Debug info</label></td>

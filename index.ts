@@ -74,7 +74,10 @@ function regenerate() {
     config += checked("enable-werror");
     config += checked("disable-werror");
 
-    ldflags += cs("use-gold", "-fuse-ld=gold");
+    ldflags += checked("use-ld-bfd", "-fuse-ld=bfd");
+    ldflags += checked("use-ld-lld", "-fuse-ld=lld");
+    ldflags += checked("use-ld-gold", "-fuse-ld=gold");
+
     cflags += cs("debuginfo", "-g3");
     cxxflags += cs("debuginfo", "-g3");
     cflags += cs("optimized", "-O2", "-O0");
