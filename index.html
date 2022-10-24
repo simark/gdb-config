@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <style>
     td:first-child,
@@ -10,6 +11,7 @@
     td:nth-child(2) {
       font-family: monospace;
     }
+
   </style>
   <script src="./index.js"></script>
 </head>
@@ -68,13 +70,13 @@
       <td>Linker</td>
       <td>LDFLAGS += -fuse-ld={bfd,gold,lld}</td>
       <td>
-        <input type="radio" id="use-ld-default" name="use-ld" />
+        <input type="radio" id="use-ld-default" name="use-ld" checked="true" />
         <label for="use-ld-bfd">default</label>
 
         <input type="radio" id="use-ld-bfd" name="use-ld" />
         <label for="use-ld-bfd">bfd</label>
 
-        <input type="radio" id="use-ld-lld" name="use-ld" checked="true" />
+        <input type="radio" id="use-ld-lld" name="use-ld" />
         <label for="use-ld-lld">lld</label>
 
         <input type="radio" id="use-ld-gold" name="use-ld" />
