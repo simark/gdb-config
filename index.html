@@ -68,19 +68,22 @@
     </tr>
     <tr>
       <td>Linker</td>
-      <td>LDFLAGS += -fuse-ld={bfd,gold,lld}</td>
+      <td>LDFLAGS += -fuse-ld={bfd,gold,lld,mold}</td>
       <td>
         <input type="radio" id="use-ld-default" name="use-ld" checked="true" />
-        <label for="use-ld-bfd">default</label>
+        <label for="use-ld-default">default</label>
 
         <input type="radio" id="use-ld-bfd" name="use-ld" />
         <label for="use-ld-bfd">bfd</label>
 
+        <input type="radio" id="use-ld-gold" name="use-ld" />
+        <label for="use-ld-gold">gold</label>
+
         <input type="radio" id="use-ld-lld" name="use-ld" />
         <label for="use-ld-lld">lld</label>
 
-        <input type="radio" id="use-ld-gold" name="use-ld" />
-        <label for="use-ld-gold">gold</label>
+        <input type="radio" id="use-ld-mold" name="use-ld" />
+        <label for="use-ld-mold">mold</label>
       </td>
     </tr>
     <tr>
