@@ -84,7 +84,7 @@ function regenerate() {
     config += cs("with-system-readline");
     config += cs("with-system-zlib");
     cxxflags += cs("optimized", "-O2", "-O0");
-    for (const tool of ["binutils", "gold", "ld", "gprof", "gas", "sim"]) {
+    for (const tool of ["binutils", "gold", "ld", "gprof", "gprofng", "gas", "sim"]) {
         config += cs("disable-" + tool);
     }
     config += vf("target");
