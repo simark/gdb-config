@@ -46,22 +46,41 @@ function rs(val: string): string {
     }
     return val;
 }
+function shellQuote(val: string): string {
+    return "'" + val.replace(/'/g, String.raw`'"'"'`) + "'";
+}
+function shellQuotePath(val: string): string {
+    const match = val.match(/^(~(?:[^/]+)?)(?:\/(.*))?$/);
+    if (!match) {
+        return shellQuote(val);
+    }
+
+    const homeDir = match[1];
+    const pathWithinHome = match[2];
+    if (!pathWithinHome) {
+        return homeDir;
+    }
+    return homeDir + "/" + shellQuote(pathWithinHome);
+}
 function vf(id: string): string {
     const val = v(id);
     if (!val) {
         return "";
     }
-    return " --" + id + "=" + val;
+    return " --" + id + "=" + shellQuote(val);
 }
 function vv(id: string): string {
     const val = v(id);
     if (!val) {
         return "";
     }
-    return " " + id.toUpperCase() + '="' + val + '"';
+    return " " + id.toUpperCase() + "=" + shellQuote(val);
 }
 function regenerate() {
     let config = v("configure");
+    if (config) {
+        config = shellQuotePath(config);
+    }
     let cflags = "";
     let cxxflags = "";
     let ldflags = "";
@@ -118,9 +137,9 @@ function regenerate() {
     cflags += vs("additional-cflags");
     cxxflags += vs("additional-cxxflags");
     ldflags += vs("additional-ldflags");
-    config += cflags ? ' CFLAGS="' + rs(cflags) + '"' : "";
-    config += cxxflags ? ' CXXFLAGS="' + rs(cxxflags) + '"' : "";
-    config += ldflags ? ' LDFLAGS="' + rs(ldflags) + '"' : "";
+    config += cflags ? " CFLAGS=" + shellQuote(rs(cflags)) : "";
+    config += cxxflags ? " CXXFLAGS=" + shellQuote(rs(cxxflags)) : "";
+    config += ldflags ? " LDFLAGS=" + shellQuote(rs(ldflags)) : "";
     const textarea = document.getElementById("result");
     if (!(textarea instanceof HTMLTextAreaElement)) {
         return;
