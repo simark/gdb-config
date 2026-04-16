@@ -33,6 +33,17 @@
         margin-bottom: 0;
       }
 
+      .button-choice-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .button-choice-group .btn {
+        min-width: 6.5rem;
+        padding: 0.375rem 0.75rem;
+      }
+
       .preset-actions {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
@@ -167,47 +178,41 @@
                       <td>Silent rules</td>
                       <td></td>
                       <td>
-                        <div class="choice-group">
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="enable-silent-rules"
-                              name="silent-rules"
-                              checked
-                            />
-                            <label
-                              class="form-check-label"
-                              for="enable-silent-rules"
-                              >Enable</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="disable-silent-rules"
-                              name="silent-rules"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="disable-silent-rules"
-                              >Disable</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="auto-silent-rules"
-                              name="silent-rules"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="auto-silent-rules"
-                              >Auto</label
-                            >
-                          </div>
+                        <div class="button-choice-group">
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="enable-silent-rules"
+                            name="silent-rules"
+                            checked
+                          />
+                          <label
+                            class="btn btn-outline-primary"
+                            for="enable-silent-rules"
+                            >Enable</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="disable-silent-rules"
+                            name="silent-rules"
+                          />
+                          <label
+                            class="btn btn-outline-primary"
+                            for="disable-silent-rules"
+                            >Disable</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="auto-silent-rules"
+                            name="silent-rules"
+                          />
+                          <label
+                            class="btn btn-outline-primary"
+                            for="auto-silent-rules"
+                            >Auto</label
+                          >
                         </div>
                       </td>
                     </tr>
@@ -263,41 +268,37 @@
                       <td>Enable -Werror</td>
                       <td>--{enable,disable}-werror</td>
                       <td>
-                        <div class="choice-group">
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="enable-werror"
-                              name="werror"
-                            />
-                            <label class="form-check-label" for="enable-werror"
-                              >Enable</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="disable-werror"
-                              name="werror"
-                            />
-                            <label class="form-check-label" for="disable-werror"
-                              >Disable</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="auto-werror"
-                              name="werror"
-                              checked
-                            />
-                            <label class="form-check-label" for="auto-werror"
-                              >Auto</label
-                            >
-                          </div>
+                        <div class="button-choice-group">
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="enable-werror"
+                            name="werror"
+                          />
+                          <label class="btn btn-outline-primary" for="enable-werror"
+                            >Enable</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="disable-werror"
+                            name="werror"
+                          />
+                          <label
+                            class="btn btn-outline-primary"
+                            for="disable-werror"
+                            >Disable</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="auto-werror"
+                            name="werror"
+                            checked
+                          />
+                          <label class="btn btn-outline-primary" for="auto-werror"
+                            >Auto</label
+                          >
                         </div>
                       </td>
                     </tr>
@@ -305,63 +306,53 @@
                       <td>Linker</td>
                       <td>LDFLAGS += -fuse-ld={bfd,gold,lld,mold}</td>
                       <td>
-                        <div class="choice-group">
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="use-ld-default"
-                              name="use-ld"
-                              checked
-                            />
-                            <label class="form-check-label" for="use-ld-default"
-                              >default</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="use-ld-bfd"
-                              name="use-ld"
-                            />
-                            <label class="form-check-label" for="use-ld-bfd"
-                              >bfd</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="use-ld-gold"
-                              name="use-ld"
-                            />
-                            <label class="form-check-label" for="use-ld-gold"
-                              >gold</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="use-ld-lld"
-                              name="use-ld"
-                            />
-                            <label class="form-check-label" for="use-ld-lld"
-                              >lld</label
-                            >
-                          </div>
-                          <div class="form-check form-check-inline me-0">
-                            <input
-                              type="radio"
-                              class="form-check-input"
-                              id="use-ld-mold"
-                              name="use-ld"
-                            />
-                            <label class="form-check-label" for="use-ld-mold"
-                              >mold</label
-                            >
-                          </div>
+                        <div class="button-choice-group">
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="use-ld-default"
+                            name="use-ld"
+                            checked
+                          />
+                          <label class="btn btn-outline-primary" for="use-ld-default"
+                            >Default</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="use-ld-bfd"
+                            name="use-ld"
+                          />
+                          <label class="btn btn-outline-primary" for="use-ld-bfd"
+                            >bfd</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="use-ld-gold"
+                            name="use-ld"
+                          />
+                          <label class="btn btn-outline-primary" for="use-ld-gold"
+                            >gold</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="use-ld-lld"
+                            name="use-ld"
+                          />
+                          <label class="btn btn-outline-primary" for="use-ld-lld"
+                            >lld</label
+                          >
+                          <input
+                            type="radio"
+                            class="btn-check"
+                            id="use-ld-mold"
+                            name="use-ld"
+                          />
+                          <label class="btn btn-outline-primary" for="use-ld-mold"
+                            >mold</label
+                          >
                         </div>
                       </td>
                     </tr>
