@@ -1,19 +1,39 @@
 "use strict";
 
+function getInputElement(id: string): HTMLInputElement | null {
+    const element = document.getElementById(id);
+    if (!(element instanceof HTMLInputElement)) {
+        return null;
+    }
+
+    return element;
+}
+
+function getResultTextarea(): HTMLTextAreaElement | null {
+    const element = document.getElementById("result");
+    if (!(element instanceof HTMLTextAreaElement)) {
+        return null;
+    }
+
+    return element;
+}
+
 function getInputValue(id: string): string {
-    const el = document.getElementById(id);
-    if (!(el instanceof HTMLInputElement)) {
+    const input = getInputElement(id);
+    if (!input) {
         return "";
     }
-    return el.value;
+
+    return input.value;
 }
 
 function getCheckedOptionValue(id: string, valueOn?: string, valueOff?: string): string {
-    const element = document.getElementById(id);
-    if (!(element instanceof HTMLInputElement)) {
+    const input = getInputElement(id);
+    if (!input) {
         return "";
     }
-    if (!element.checked) {
+
+    if (!input.checked) {
         if (valueOff) {
             return " " + valueOff;
         } else {
@@ -227,22 +247,19 @@ function regenerate() {
 
     addAdditionalFlags(flagValues);
     config = appendFlagVariables(config, flagValues);
-    const textarea = document.getElementById("result");
-    if (!(textarea instanceof HTMLTextAreaElement)) {
+    const textarea = getResultTextarea();
+    if (!textarea) {
         return;
     }
+
     textarea.value = config;
 }
 document.addEventListener("DOMContentLoaded", () => {
-    const els = document.getElementsByTagName("input");
-    for (let i = 0; i < els.length; i++) {
-        const el = els.item(i);
-        if (!el) {
-            continue;
-        }
-
-        el.onchange = regenerate;
-        el.onkeyup = regenerate;
+    const inputs = document.querySelectorAll<HTMLInputElement>("input");
+    for (const input of inputs) {
+        input.addEventListener("input", regenerate);
+        input.addEventListener("change", regenerate);
     }
+
     regenerate();
 });
