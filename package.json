@@ -10,6 +10,7 @@
     "lint:js": "eslint .",
     "lint:html": "htmlhint index.html",
     "test": "npm run build && node --test",
+    "upload": "npm run build && scp index.html index.js simark.ca:/var/www/html/simark/gdb-config",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

@@ -35,6 +35,12 @@ Run tests:
 npm test
 ```
 
+Build and upload the static files:
+
+```sh
+npm run upload
+```
+
 ## Usage
 
 After building, open `index.html` in a browser.
