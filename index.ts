@@ -1,6 +1,6 @@
 "use strict";
 
-function v(id: string): string {
+function getInputValue(id: string): string {
     const el = document.getElementById(id);
     if (!(el instanceof HTMLInputElement)) {
         return "";
@@ -8,7 +8,7 @@ function v(id: string): string {
     return el.value;
 }
 
-function checked(id: string, valueOn?: string, valueOff?: string): string {
+function getCheckedOptionValue(id: string, valueOn?: string, valueOff?: string): string {
     const element = document.getElementById(id);
     if (!(element instanceof HTMLInputElement)) {
         return "";
@@ -26,7 +26,7 @@ function checked(id: string, valueOn?: string, valueOff?: string): string {
         return " --" + id;
     }
 }
-function rs(val: string): string {
+function trimLeadingSpace(val: string): string {
     while (val.charAt(0) === " ") {
         val = val.substring(1);
     }
@@ -48,15 +48,15 @@ function shellQuotePath(val: string): string {
     }
     return homeDir + "/" + shellQuote(pathWithinHome);
 }
-function vf(id: string): string {
-    const val = v(id);
+function buildValueOption(id: string): string {
+    const val = getInputValue(id);
     if (!val) {
         return "";
     }
     return " --" + id + "=" + shellQuote(val);
 }
-function vv(id: string): string {
-    const val = v(id);
+function buildEnvVarAssignment(id: string): string {
+    const val = getInputValue(id);
     if (!val) {
         return "";
     }
@@ -142,17 +142,17 @@ function appendOptions(base: string, values: string[]): string {
 
 function collectCheckedOptions(options: CheckedOption[]): string[] {
     return options
-        .map((option) => checked(option.id, option.valueOn, option.valueOff))
+        .map((option) => getCheckedOptionValue(option.id, option.valueOn, option.valueOff))
         .filter((value) => value.length > 0);
 }
 
 function collectValueOptions(ids: string[]): string[] {
-    return ids.map((id) => vf(id)).filter((value) => value.length > 0);
+    return ids.map((id) => buildValueOption(id)).filter((value) => value.length > 0);
 }
 
 function addFlagOptions(flagValues: Record<FlagBucket, string[]>, options: FlagOption[]): void {
     for (const option of options) {
-        const value = rs(checked(option.id, option.valueOn, option.valueOff));
+        const value = trimLeadingSpace(getCheckedOptionValue(option.id, option.valueOn, option.valueOff));
         if (!value) {
             continue;
         }
@@ -165,7 +165,7 @@ function addFlagOptions(flagValues: Record<FlagBucket, string[]>, options: FlagO
 
 function addAdditionalFlags(flagValues: Record<FlagBucket, string[]>): void {
     for (const input of additionalFlagInputs) {
-        const value = v(input.id);
+        const value = getInputValue(input.id);
         if (!value) {
             continue;
         }
@@ -194,7 +194,7 @@ function appendFlagVariables(config: string, flagValues: Record<FlagBucket, stri
 }
 
 function regenerate() {
-    let config = v("configure");
+    let config = getInputValue("configure");
     if (config) {
         config = shellQuotePath(config);
     }
@@ -204,7 +204,7 @@ function regenerate() {
         ldflags: [],
     };
 
-    config = appendOptions(config, envVarOptions.map((id) => vv(id)));
+    config = appendOptions(config, envVarOptions.map((id) => buildEnvVarAssignment(id)));
     config = appendOptions(config, collectCheckedOptions(configureModeOptions));
 
     addFlagOptions(flagValues, linkerOptions);
@@ -217,11 +217,11 @@ function regenerate() {
 
     addFlagOptions(flagValues, compilerExtraFlagOptions);
 
-    const maxErrors = v("max-errors");
+    const maxErrors = getInputValue("max-errors");
     if (maxErrors.length > 0) {
-        const cflagsMaxErrorsFlag = v("cc").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
+        const cflagsMaxErrorsFlag = getInputValue("cc").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
         flagValues.cflags.push(cflagsMaxErrorsFlag + "=" + maxErrors);
-        const cxxflagsMaxErrorsFlag = v("cxx").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
+        const cxxflagsMaxErrorsFlag = getInputValue("cxx").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
         flagValues.cxxflags.push(cxxflagsMaxErrorsFlag + "=" + maxErrors);
     }
 
