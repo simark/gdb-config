@@ -3,6 +3,13 @@ export type CommandBuilderInputs = {
   checked: Record<string, boolean | undefined>;
 };
 
+export type CommandPresetName =
+  | "debug"
+  | "debug-all-targets"
+  | "optimized"
+  | "optimized-all-targets"
+  | "perf";
+
 type FlagBucket = "cflags" | "cxxflags" | "ldflags";
 
 type CheckedOption = {
@@ -89,6 +96,92 @@ const additionalFlagInputs: Array<{ id: string; bucket: FlagBucket }> = [
   { id: "additional-cxxflags", bucket: "cxxflags" },
   { id: "additional-ldflags", bucket: "ldflags" },
 ];
+
+const debugPresetInputs: CommandBuilderInputs = {
+  values: {
+    configure: "~/src/binutils-gdb/configure",
+    cc: "ccache gcc",
+    cxx: "ccache g++",
+    target: "",
+    "enable-targets": "",
+    "with-expat": "yes",
+    "with-python": "python3",
+    "with-guile": "guile-2.0",
+    "max-errors": "1",
+    "additional-cflags": "",
+    "additional-cxxflags": "",
+    "additional-ldflags": "",
+  },
+  checked: {
+    "enable-silent-rules": true,
+    "disable-silent-rules": false,
+    "auto-silent-rules": false,
+    "enable-werror": false,
+    "disable-werror": false,
+    "auto-werror": true,
+    "use-ld-default": true,
+    "use-ld-bfd": false,
+    "use-ld-gold": false,
+    "use-ld-lld": false,
+    "use-ld-mold": false,
+    debuginfo: true,
+    optimized: false,
+    "with-system-readline": true,
+    "with-system-zlib": true,
+    "disable-binutils": false,
+    "disable-gold": true,
+    "disable-ld": true,
+    "disable-gprof": true,
+    "disable-gprofng": true,
+    "disable-gas": true,
+    "disable-sim": false,
+    "with-intel-pt": true,
+    "with-babeltrace": true,
+    "with-debuginfod": true,
+    "enable-libctf": true,
+    "disable-nls": false,
+    "sanitize-address": true,
+    "enable-ubsan": true,
+    "glibcxx-debug": true,
+    "diagnostics-color-always": true,
+  },
+};
+
+function cloneInputs(inputs: CommandBuilderInputs): CommandBuilderInputs {
+  return {
+    values: { ...inputs.values },
+    checked: { ...inputs.checked },
+  };
+}
+
+export function createPresetInputs(
+  presetName: CommandPresetName,
+): CommandBuilderInputs {
+  const inputs = cloneInputs(debugPresetInputs);
+
+  switch (presetName) {
+    case "debug-all-targets":
+      inputs.values["enable-targets"] = "all";
+      break;
+    case "optimized":
+      inputs.checked.optimized = true;
+      break;
+    case "optimized-all-targets":
+      inputs.checked.optimized = true;
+      inputs.values["enable-targets"] = "all";
+      break;
+    case "perf":
+      inputs.checked.optimized = true;
+      inputs.checked["sanitize-address"] = false;
+      inputs.checked["enable-ubsan"] = false;
+      inputs.checked["glibcxx-debug"] = false;
+      break;
+    case "debug":
+      break;
+  }
+
+  return inputs;
+}
 
 function getInputValue(inputs: CommandBuilderInputs, id: string): string {
   return inputs.values[id] ?? "";

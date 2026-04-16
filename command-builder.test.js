@@ -1,56 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildConfigureCommand } from "./command-builder.js";
+import { buildConfigureCommand, createPresetInputs } from "./command-builder.js";
 
 function createDefaultInputs() {
-  return {
-    values: {
-      configure: "~/src/binutils-gdb/configure",
-      cc: "ccache gcc",
-      cxx: "ccache g++",
-      target: "",
-      "enable-targets": "all",
-      "with-expat": "yes",
-      "with-python": "python3",
-      "with-guile": "guile-2.0",
-      "max-errors": "1",
-      "additional-cflags": "",
-      "additional-cxxflags": "",
-      "additional-ldflags": "",
-    },
-    checked: {
-      "enable-silent-rules": true,
-      "disable-silent-rules": false,
-      "enable-werror": false,
-      "disable-werror": false,
-      "use-ld-default": true,
-      "use-ld-bfd": false,
-      "use-ld-gold": false,
-      "use-ld-lld": false,
-      "use-ld-mold": false,
-      debuginfo: true,
-      optimized: false,
-      "with-system-readline": true,
-      "with-system-zlib": true,
-      "disable-binutils": false,
-      "disable-gold": true,
-      "disable-ld": true,
-      "disable-gprof": true,
-      "disable-gprofng": true,
-      "disable-gas": true,
-      "disable-sim": false,
-      "with-intel-pt": true,
-      "with-babeltrace": true,
-      "with-debuginfod": true,
-      "enable-libctf": true,
-      "disable-nls": false,
-      "sanitize-address": true,
-      "enable-ubsan": true,
-      "glibcxx-debug": true,
-      "diagnostics-color-always": true,
-    },
-  };
+  return createPresetInputs("debug-all-targets");
 }
 
 test("buildConfigureCommand matches the default UI output", () => {
@@ -89,4 +43,37 @@ test("buildConfigureCommand uses clang-specific max error flags", () => {
   assert.match(command, /CFLAGS='[^']*-ferror-limit=1'/);
   assert.match(command, /CXXFLAGS='[^']*-ferror-limit=1'/);
   assert.doesNotMatch(command, /-ferror-limit==1/);
+});
+
+test("debug preset omits all-targets while debug-all-targets includes it", () => {
+  const debugCommand = buildConfigureCommand(createPresetInputs("debug"));
+  const allTargetsCommand = buildConfigureCommand(
+    createPresetInputs("debug-all-targets"),
+  );
+
+  assert.doesNotMatch(debugCommand, /--enable-targets=/);
+  assert.match(allTargetsCommand, /--enable-targets='all'/);
+});
+
+test("optimized presets mirror debug presets but use -O2", () => {
+  const optimizedCommand = buildConfigureCommand(createPresetInputs("optimized"));
+  const optimizedAllTargetsCommand = buildConfigureCommand(
+    createPresetInputs("optimized-all-targets"),
+  );
+
+  assert.match(optimizedCommand, /CFLAGS='[^']*-g3 -O2 /);
+  assert.match(optimizedCommand, /CXXFLAGS='[^']*-g3 -O2 /);
+  assert.doesNotMatch(optimizedCommand, /--enable-targets=/);
+  assert.match(optimizedAllTargetsCommand, /--enable-targets='all'/);
+  assert.match(optimizedAllTargetsCommand, /CFLAGS='[^']*-g3 -O2 /);
+  assert.match(optimizedAllTargetsCommand, /CXXFLAGS='[^']*-g3 -O2 /);
+});
+
+test("perf preset enables optimization and disables sanitizers", () => {
+  const command = buildConfigureCommand(createPresetInputs("perf"));
+
+  assert.match(command, /CFLAGS='[^']*-g3 -O2 /);
+  assert.doesNotMatch(command, /-fsanitize=address/);
+  assert.doesNotMatch(command, /--enable-ubsan/);
+  assert.doesNotMatch(command, /_GLIBCXX_DEBUG/);
 });
