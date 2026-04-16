@@ -1,303 +1,758 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GDB Configure Command Generator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GDB Configure Command Generator</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
+      .command-output {
+        min-height: 11rem;
+      }
 
-    .command-output {
-      min-height: 11rem;
-    }
+      .option-table th:nth-child(2),
+      .option-table td:nth-child(2) {
+        font-family: var(--bs-font-monospace);
+        white-space: nowrap;
+      }
 
-    .option-table th:nth-child(2),
-    .option-table td:nth-child(2) {
-      font-family: var(--bs-font-monospace);
-      white-space: nowrap;
-    }
+      .choice-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+      }
 
-    .choice-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 1rem;
-    }
+      .choice-group .form-check {
+        margin-bottom: 0;
+      }
+    </style>
+    <script src="./index.js"></script>
+  </head>
 
-    .choice-group .form-check {
-      margin-bottom: 0;
-    }
-  </style>
-  <script src="./index.js"></script>
-</head>
-
-<body>
-  <main class="container py-4 py-lg-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-xxl-10">
-        <div class="mb-4">
-          <h1 class="h2 mb-2">GDB Configure Command Generator</h1>
-          <p class="text-secondary mb-0">Pick common GDB and binutils build options, then copy the generated shell command.</p>
-        </div>
-
-        <section class="card shadow-sm mb-4">
-          <div class="card-body">
-            <label for="result" class="form-label fw-semibold">Generated configure command</label>
-            <textarea rows="8" cols="80" id="result" class="form-control command-output font-monospace" readonly></textarea>
+  <body>
+    <main class="container py-4 py-lg-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-xxl-10">
+          <div class="mb-4">
+            <h1 class="h2 mb-2">GDB Configure Command Generator</h1>
+            <p class="text-secondary mb-0">
+              Pick common GDB and binutils build options, then copy the
+              generated shell command.
+            </p>
           </div>
-        </section>
 
-        <section class="card shadow-sm">
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0 option-table">
-                <thead class="table-light">
-                  <tr>
-                    <th scope="col">Option</th>
-                    <th scope="col">Flag</th>
-                    <th scope="col">Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><label for="configure" class="form-label mb-0">Path to configure</label></td>
-                    <td></td>
-                    <td><input type="text" class="form-control" id="configure" value="~/src/binutils-gdb/configure" /></td>
-                  </tr>
-                  <tr>
-                    <td>Silent rules</td>
-                    <td></td>
-                    <td>
-                      <div class="choice-group">
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="enable-silent-rules" name="silent-rules" checked />
-                          <label class="form-check-label" for="enable-silent-rules">Enable</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="disable-silent-rules" name="silent-rules" />
-                          <label class="form-check-label" for="disable-silent-rules">Disable</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="auto-silent-rules" name="silent-rules" />
-                          <label class="form-check-label" for="auto-silent-rules">Auto</label>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><label for="cc" class="form-label mb-0">C Compiler</label></td>
-                    <td>CC</td>
-                    <td><input type="text" class="form-control" id="cc" value="ccache gcc" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="cxx" class="form-label mb-0">C++ Compiler</label></td>
-                    <td>CXX</td>
-                    <td><input type="text" class="form-control" id="cxx" value="ccache g++" /></td>
-                  </tr>
-                  <tr>
-                    <td>Enable -Werror</td>
-                    <td>--{enable,disable}-werror</td>
-                    <td>
-                      <div class="choice-group">
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="enable-werror" name="werror" />
-                          <label class="form-check-label" for="enable-werror">Enable</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="disable-werror" name="werror" />
-                          <label class="form-check-label" for="disable-werror">Disable</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="auto-werror" name="werror" checked />
-                          <label class="form-check-label" for="auto-werror">Auto</label>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Linker</td>
-                    <td>LDFLAGS += -fuse-ld={bfd,gold,lld,mold}</td>
-                    <td>
-                      <div class="choice-group">
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="use-ld-default" name="use-ld" checked />
-                          <label class="form-check-label" for="use-ld-default">default</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="use-ld-bfd" name="use-ld" />
-                          <label class="form-check-label" for="use-ld-bfd">bfd</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="use-ld-gold" name="use-ld" />
-                          <label class="form-check-label" for="use-ld-gold">gold</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="use-ld-lld" name="use-ld" />
-                          <label class="form-check-label" for="use-ld-lld">lld</label>
-                        </div>
-                        <div class="form-check form-check-inline me-0">
-                          <input type="radio" class="form-check-input" id="use-ld-mold" name="use-ld" />
-                          <label class="form-check-label" for="use-ld-mold">mold</label>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><label for="debuginfo" class="form-label mb-0">Debug info</label></td>
-                    <td>C(XX)FLAGS += -g3</td>
-                    <td><input type="checkbox" class="form-check-input" id="debuginfo" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="optimized" class="form-label mb-0">Optimized</label></td>
-                    <td>C(XX)FLAGS += -O2/-O0</td>
-                    <td><input type="checkbox" class="form-check-input" id="optimized" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-system-readline" class="form-label mb-0">With system readline</label></td>
-                    <td>--with-system-readline</td>
-                    <td><input type="checkbox" class="form-check-input" id="with-system-readline" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-system-zlib" class="form-label mb-0">With system zlib</label></td>
-                    <td>--with-system-zlib</td>
-                    <td><input type="checkbox" class="form-check-input" id="with-system-zlib" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-binutils" class="form-label mb-0">Disable binutils</label></td>
-                    <td>--disable-binutils</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-binutils" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-gold" class="form-label mb-0">Disable gold</label></td>
-                    <td>--disable-gold</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-gold" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-ld" class="form-label mb-0">Disable ld</label></td>
-                    <td>--disable-ld</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-ld" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-gprof" class="form-label mb-0">Disable gprof</label></td>
-                    <td>--disable-gprof</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-gprof" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-gprofng" class="form-label mb-0">Disable gprofng</label></td>
-                    <td>--disable-gprofng</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-gprofng" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-gas" class="form-label mb-0">Disable gas</label></td>
-                    <td>--disable-gas</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-gas" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-sim" class="form-label mb-0">Disable sim</label></td>
-                    <td>--disable-sim</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-sim" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="target" class="form-label mb-0">Target</label></td>
-                    <td>--target</td>
-                    <td><input type="text" class="form-control" id="target" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="enable-targets" class="form-label mb-0">Enable targets</label></td>
-                    <td>--enable-targets</td>
-                    <td><input type="text" class="form-control" id="enable-targets" value="all" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-expat" class="form-label mb-0">Expat</label></td>
-                    <td>--with-expat</td>
-                    <td><input type="text" class="form-control" id="with-expat" value="yes" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-python" class="form-label mb-0">Python</label></td>
-                    <td>--with-python</td>
-                    <td><input type="text" class="form-control" id="with-python" value="python3" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-guile" class="form-label mb-0">With guile</label></td>
-                    <td>--with-guile</td>
-                    <td><input type="text" class="form-control" id="with-guile" value="guile-2.0" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-intel-pt" class="form-label mb-0">With <a href="https://github.com/01org/processor-trace">Intel PT</a></label></td>
-                    <td>--with-intel-pt</td>
-                    <td><input type="checkbox" class="form-check-input" id="with-intel-pt" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-babeltrace" class="form-label mb-0">With <a href="http://diamon.org/babeltrace/">Babeltrace</a></label></td>
-                    <td>--with-babeltrace</td>
-                    <td><input type="checkbox" class="form-check-input" id="with-babeltrace" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="with-debuginfod" class="form-label mb-0">With <a href="https://sourceware.org/elfutils/Debuginfod.html">debuginfod</a></label></td>
-                    <td>--with-debuginfod</td>
-                    <td><input type="checkbox" class="form-check-input" id="with-debuginfod" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="enable-libctf" class="form-label mb-0">Enable CTF (Compact C Type Format) support</label></td>
-                    <td>--enable-libctf</td>
-                    <td><input type="checkbox" class="form-check-input" id="enable-libctf" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="disable-nls" class="form-label mb-0">Disable internationalization</label></td>
-                    <td>--disable-nls</td>
-                    <td><input type="checkbox" class="form-check-input" id="disable-nls" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="sanitize-address" class="form-label mb-0">With AddressSanitizer</label></td>
-                    <td>{C,CXX,LD}FLAGS += -fsanitize=address</td>
-                    <td><input type="checkbox" class="form-check-input" id="sanitize-address" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="enable-ubsan" class="form-label mb-0">With UBSan</label></td>
-                    <td>--enable-ubsan</td>
-                    <td><input type="checkbox" class="form-check-input" id="enable-ubsan" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="glibcxx-debug" class="form-label mb-0">With libstdc++ debug</label></td>
-                    <td>CXXFLAGS += -D_GLIBCXX_DEBUG=1</td>
-                    <td><input type="checkbox" class="form-check-input" id="glibcxx-debug" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="max-errors" class="form-label mb-0">Max compiler errors</label></td>
-                    <td>-fmax-errors / -ferror-limit</td>
-                    <td><input type="text" class="form-control" id="max-errors" value="1" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="diagnostics-color-always" class="form-label mb-0">Always use diagnostic colors</label></td>
-                    <td>-fdiagnostics-color=always</td>
-                    <td><input type="checkbox" class="form-check-input" id="diagnostics-color-always" checked /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="additional-cflags" class="form-label mb-0">Additional CFLAGS</label></td>
-                    <td>CFLAGS</td>
-                    <td><input type="text" class="form-control" id="additional-cflags" value="" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="additional-cxxflags" class="form-label mb-0">Additional CXXFLAGS</label></td>
-                    <td>CXXFLAGS</td>
-                    <td><input type="text" class="form-control" id="additional-cxxflags" value="" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="additional-ldflags" class="form-label mb-0">Additional LDFLAGS</label></td>
-                    <td>LDFLAGS</td>
-                    <td><input type="text" class="form-control" id="additional-ldflags" value="" /></td>
-                  </tr>
-                </tbody>
-              </table>
+          <section class="card shadow-sm mb-4">
+            <div class="card-body">
+              <label for="result" class="form-label fw-semibold"
+                >Generated configure command</label
+              >
+              <textarea
+                rows="8"
+                cols="80"
+                id="result"
+                class="form-control command-output font-monospace"
+                readonly
+              ></textarea>
             </div>
-          </div>
-        </section>
-      </div>
-    </div>
-  </main>
-</body>
+          </section>
 
+          <section class="card shadow-sm">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 option-table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col">Option</th>
+                      <th scope="col">Flag</th>
+                      <th scope="col">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <label for="configure" class="form-label mb-0"
+                          >Path to configure</label
+                        >
+                      </td>
+                      <td></td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="configure"
+                          value="~/src/binutils-gdb/configure"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Silent rules</td>
+                      <td></td>
+                      <td>
+                        <div class="choice-group">
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="enable-silent-rules"
+                              name="silent-rules"
+                              checked
+                            />
+                            <label
+                              class="form-check-label"
+                              for="enable-silent-rules"
+                              >Enable</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="disable-silent-rules"
+                              name="silent-rules"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="disable-silent-rules"
+                              >Disable</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="auto-silent-rules"
+                              name="silent-rules"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="auto-silent-rules"
+                              >Auto</label
+                            >
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="cc" class="form-label mb-0"
+                          >C Compiler</label
+                        >
+                      </td>
+                      <td>CC</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="cc"
+                          value="ccache gcc"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="cxx" class="form-label mb-0"
+                          >C++ Compiler</label
+                        >
+                      </td>
+                      <td>CXX</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="cxx"
+                          value="ccache g++"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Enable -Werror</td>
+                      <td>--{enable,disable}-werror</td>
+                      <td>
+                        <div class="choice-group">
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="enable-werror"
+                              name="werror"
+                            />
+                            <label class="form-check-label" for="enable-werror"
+                              >Enable</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="disable-werror"
+                              name="werror"
+                            />
+                            <label class="form-check-label" for="disable-werror"
+                              >Disable</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="auto-werror"
+                              name="werror"
+                              checked
+                            />
+                            <label class="form-check-label" for="auto-werror"
+                              >Auto</label
+                            >
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Linker</td>
+                      <td>LDFLAGS += -fuse-ld={bfd,gold,lld,mold}</td>
+                      <td>
+                        <div class="choice-group">
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="use-ld-default"
+                              name="use-ld"
+                              checked
+                            />
+                            <label class="form-check-label" for="use-ld-default"
+                              >default</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="use-ld-bfd"
+                              name="use-ld"
+                            />
+                            <label class="form-check-label" for="use-ld-bfd"
+                              >bfd</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="use-ld-gold"
+                              name="use-ld"
+                            />
+                            <label class="form-check-label" for="use-ld-gold"
+                              >gold</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="use-ld-lld"
+                              name="use-ld"
+                            />
+                            <label class="form-check-label" for="use-ld-lld"
+                              >lld</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline me-0">
+                            <input
+                              type="radio"
+                              class="form-check-input"
+                              id="use-ld-mold"
+                              name="use-ld"
+                            />
+                            <label class="form-check-label" for="use-ld-mold"
+                              >mold</label
+                            >
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="debuginfo" class="form-label mb-0"
+                          >Debug info</label
+                        >
+                      </td>
+                      <td>C(XX)FLAGS += -g3</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="debuginfo"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="optimized" class="form-label mb-0"
+                          >Optimized</label
+                        >
+                      </td>
+                      <td>C(XX)FLAGS += -O2/-O0</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="optimized"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label
+                          for="with-system-readline"
+                          class="form-label mb-0"
+                          >With system readline</label
+                        >
+                      </td>
+                      <td>--with-system-readline</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="with-system-readline"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="with-system-zlib" class="form-label mb-0"
+                          >With system zlib</label
+                        >
+                      </td>
+                      <td>--with-system-zlib</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="with-system-zlib"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-binutils" class="form-label mb-0"
+                          >Disable binutils</label
+                        >
+                      </td>
+                      <td>--disable-binutils</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-binutils"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-gold" class="form-label mb-0"
+                          >Disable gold</label
+                        >
+                      </td>
+                      <td>--disable-gold</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-gold"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-ld" class="form-label mb-0"
+                          >Disable ld</label
+                        >
+                      </td>
+                      <td>--disable-ld</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-ld"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-gprof" class="form-label mb-0"
+                          >Disable gprof</label
+                        >
+                      </td>
+                      <td>--disable-gprof</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-gprof"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-gprofng" class="form-label mb-0"
+                          >Disable gprofng</label
+                        >
+                      </td>
+                      <td>--disable-gprofng</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-gprofng"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-gas" class="form-label mb-0"
+                          >Disable gas</label
+                        >
+                      </td>
+                      <td>--disable-gas</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-gas"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-sim" class="form-label mb-0"
+                          >Disable sim</label
+                        >
+                      </td>
+                      <td>--disable-sim</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-sim"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="target" class="form-label mb-0"
+                          >Target</label
+                        >
+                      </td>
+                      <td>--target</td>
+                      <td>
+                        <input type="text" class="form-control" id="target" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="enable-targets" class="form-label mb-0"
+                          >Enable targets</label
+                        >
+                      </td>
+                      <td>--enable-targets</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="enable-targets"
+                          value="all"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="with-expat" class="form-label mb-0"
+                          >Expat</label
+                        >
+                      </td>
+                      <td>--with-expat</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="with-expat"
+                          value="yes"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="with-python" class="form-label mb-0"
+                          >Python</label
+                        >
+                      </td>
+                      <td>--with-python</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="with-python"
+                          value="python3"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="with-guile" class="form-label mb-0"
+                          >With guile</label
+                        >
+                      </td>
+                      <td>--with-guile</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="with-guile"
+                          value="guile-2.0"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="with-intel-pt" class="form-label mb-0"
+                          >With
+                          <a href="https://github.com/01org/processor-trace"
+                            >Intel PT</a
+                          ></label
+                        >
+                      </td>
+                      <td>--with-intel-pt</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="with-intel-pt"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="with-babeltrace" class="form-label mb-0"
+                          >With
+                          <a href="http://diamon.org/babeltrace/"
+                            >Babeltrace</a
+                          ></label
+                        >
+                      </td>
+                      <td>--with-babeltrace</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="with-babeltrace"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="with-debuginfod" class="form-label mb-0"
+                          >With
+                          <a
+                            href="https://sourceware.org/elfutils/Debuginfod.html"
+                            >debuginfod</a
+                          ></label
+                        >
+                      </td>
+                      <td>--with-debuginfod</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="with-debuginfod"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="enable-libctf" class="form-label mb-0"
+                          >Enable CTF (Compact C Type Format) support</label
+                        >
+                      </td>
+                      <td>--enable-libctf</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="enable-libctf"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="disable-nls" class="form-label mb-0"
+                          >Disable internationalization</label
+                        >
+                      </td>
+                      <td>--disable-nls</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="disable-nls"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="sanitize-address" class="form-label mb-0"
+                          >With AddressSanitizer</label
+                        >
+                      </td>
+                      <td>{C,CXX,LD}FLAGS += -fsanitize=address</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="sanitize-address"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="enable-ubsan" class="form-label mb-0"
+                          >With UBSan</label
+                        >
+                      </td>
+                      <td>--enable-ubsan</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="enable-ubsan"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="glibcxx-debug" class="form-label mb-0"
+                          >With libstdc++ debug</label
+                        >
+                      </td>
+                      <td>CXXFLAGS += -D_GLIBCXX_DEBUG=1</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="glibcxx-debug"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="max-errors" class="form-label mb-0"
+                          >Max compiler errors</label
+                        >
+                      </td>
+                      <td>-fmax-errors / -ferror-limit</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="max-errors"
+                          value="1"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label
+                          for="diagnostics-color-always"
+                          class="form-label mb-0"
+                          >Always use diagnostic colors</label
+                        >
+                      </td>
+                      <td>-fdiagnostics-color=always</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="diagnostics-color-always"
+                          checked
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="additional-cflags" class="form-label mb-0"
+                          >Additional CFLAGS</label
+                        >
+                      </td>
+                      <td>CFLAGS</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="additional-cflags"
+                          value=""
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="additional-cxxflags" class="form-label mb-0"
+                          >Additional CXXFLAGS</label
+                        >
+                      </td>
+                      <td>CXXFLAGS</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="additional-cxxflags"
+                          value=""
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="additional-ldflags" class="form-label mb-0"
+                          >Additional LDFLAGS</label
+                        >
+                      </td>
+                      <td>LDFLAGS</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="additional-ldflags"
+                          value=""
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>
