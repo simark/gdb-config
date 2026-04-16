@@ -127,7 +127,7 @@ function regenerate() {
     }
     textarea.value = config;
 }
-document.addEventListener("DOMContentLoaded", (event: Event) => {
+document.addEventListener("DOMContentLoaded", () => {
     const els = document.getElementsByTagName("input");
     for (let i = 0; i < els.length; i++) {
         const el = els.item(i);
