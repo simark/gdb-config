@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --pretty false && esbuild index.ts --bundle --format=iife --platform=browser --outfile=index.js",
-    "lint": "eslint .",
+    "lint": "npm run lint:js && npm run lint:html",
+    "lint:js": "eslint .",
+    "lint:html": "htmlhint index.html",
     "test": "npm run build && node --test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -18,6 +20,7 @@
     "esbuild": "^0.25.9",
     "eslint": "^10.2.0",
     "globals": "^17.5.0",
+    "htmlhint": "^1.7.1",
     "prettier": "^3.8.3",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.2"
