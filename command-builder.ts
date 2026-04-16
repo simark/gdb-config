@@ -234,9 +234,9 @@ export function buildConfigureCommand(inputs: CommandBuilderInputs): string {
 
     const maxErrors = getInputValue(inputs, "max-errors");
     if (maxErrors.length > 0) {
-        const cflagsMaxErrorsFlag = getInputValue(inputs, "cc").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
+        const cflagsMaxErrorsFlag = getInputValue(inputs, "cc").includes("clang") ? "-ferror-limit" : "-fmax-errors";
         flagValues.cflags.push(cflagsMaxErrorsFlag + "=" + maxErrors);
-        const cxxflagsMaxErrorsFlag = getInputValue(inputs, "cxx").includes("clang") ? "-ferror-limit=" : "-fmax-errors";
+        const cxxflagsMaxErrorsFlag = getInputValue(inputs, "cxx").includes("clang") ? "-ferror-limit" : "-fmax-errors";
         flagValues.cxxflags.push(cxxflagsMaxErrorsFlag + "=" + maxErrors);
     }
 
