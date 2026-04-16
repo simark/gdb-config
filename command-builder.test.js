@@ -35,7 +35,7 @@ test("buildConfigureCommand shell-quotes paths and option values", () => {
 
 test("buildConfigureCommand uses clang-specific max error flags", () => {
   const inputs = createDefaultInputs();
-  inputs.values.cc = "ccache clang";
+  inputs.values.cc = "clang";
   inputs.values.cxx = "clang++";
 
   const command = buildConfigureCommand(inputs);
@@ -43,6 +43,22 @@ test("buildConfigureCommand uses clang-specific max error flags", () => {
   assert.match(command, /CFLAGS='[^']*-ferror-limit=1'/);
   assert.match(command, /CXXFLAGS='[^']*-ferror-limit=1'/);
   assert.doesNotMatch(command, /-ferror-limit==1/);
+});
+
+test("use-ccache checkbox prepends ccache to compiler commands", () => {
+  const inputs = createDefaultInputs();
+  inputs.values.cc = "clang";
+  inputs.values.cxx = "clang++";
+
+  const withCcache = buildConfigureCommand(inputs);
+  assert.match(withCcache, / CC='ccache clang'/);
+  assert.match(withCcache, / CXX='ccache clang\+\+'/);
+
+  inputs.checked["use-ccache"] = false;
+  const withoutCcache = buildConfigureCommand(inputs);
+  assert.match(withoutCcache, / CC='clang'/);
+  assert.match(withoutCcache, / CXX='clang\+\+'/);
+  assert.doesNotMatch(withoutCcache, /ccache clang/);
 });
 
 test("debug preset omits all-targets while debug-all-targets includes it", () => {

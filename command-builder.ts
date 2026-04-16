@@ -100,8 +100,8 @@ const additionalFlagInputs: Array<{ id: string; bucket: FlagBucket }> = [
 const debugPresetInputs: CommandBuilderInputs = {
   values: {
     configure: "~/src/binutils-gdb/configure",
-    cc: "ccache gcc",
-    cxx: "ccache g++",
+    cc: "gcc",
+    cxx: "g++",
     target: "",
     "enable-targets": "",
     "with-expat": "yes",
@@ -124,6 +124,7 @@ const debugPresetInputs: CommandBuilderInputs = {
     "use-ld-gold": false,
     "use-ld-lld": false,
     "use-ld-mold": false,
+    "use-ccache": true,
     debuginfo: true,
     optimized: false,
     "with-system-readline": true,
@@ -252,7 +253,15 @@ function buildEnvVarAssignment(
   inputs: CommandBuilderInputs,
   id: string,
 ): string {
-  const val = getInputValue(inputs, id);
+  let val = getInputValue(inputs, id);
+  if (!val) {
+    return "";
+  }
+
+  if ((id === "cc" || id === "cxx") && isChecked(inputs, "use-ccache")) {
+    val = "ccache " + val;
+  }
+
   if (!val) {
     return "";
   }
