@@ -2,6 +2,7 @@ node_modules/
 
 # TypeScript build output
 index.js
+command-builder.js
 *.js.map
 *.tsbuildinfo
 

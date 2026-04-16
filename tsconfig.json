@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "module": "es2015",
     "target": "es2015",
     "lib": ["dom", "es2015"],
     "strict": true,
@@ -7,5 +8,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["index.ts"]
+  "include": ["*.ts"]
 }
