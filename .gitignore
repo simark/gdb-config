@@ -1,0 +1,9 @@
+node_modules/
+
+# TypeScript build output
+index.js
+*.js.map
+*.tsbuildinfo
+
+# npm logs
+npm-debug.log*
