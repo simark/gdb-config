@@ -52,6 +52,15 @@ For code changes, run `npm run lint` and `npm test` before finishing.
 - Keep output stable unless the behavior change is intentional; tests assert concrete command strings and regex patterns.
 - `index.html` is linted by HTMLHint with simple structural rules (lowercase tags/attrs, unique IDs, quoted attrs, etc.), so keep markup conventional.
 
+## Commit messages
+
+Write informative commit messages, not just terse summaries.
+
+- Explain the design choice or motivation in the body when it is not obvious from the diff.
+- Call out important implementation details that future readers will need to understand the approach.
+- Prefer describing *why* the change is structured this way, especially for UI behavior, state encoding, or compatibility choices.
+- Keep the subject line concise, but use the body to preserve reasoning for later debugging or archaeology.
+
 ## Good change strategy
 
 For most feature work:
