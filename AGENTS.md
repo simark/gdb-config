@@ -15,7 +15,8 @@ Prefer editing TypeScript and regenerating JavaScript.
 
 - `command-builder.ts` is the source for `command-builder.js`.
 - `index.ts` is the source used to produce the bundled `index.js`.
-- `command-builder.js` and `index.js` are generated artifacts that are committed in the repo.
+- `command-builder.js` and `index.js` are generated artifacts and are ignored by git.
+- `build/` contains deploy artifacts, including the fingerprinted browser bundle referenced by the uploaded `index.html`.
 
 Do not hand-edit generated JavaScript unless the user explicitly asks for it. Make changes in `.ts`, then run the build.
 
@@ -37,7 +38,7 @@ If you add, rename, or remove an option:
 
 Use the existing npm scripts:
 
-- `npm run build` — runs `tsc` and then bundles `index.ts` with esbuild into `index.js`
+- `npm run build` — runs `tsc`, bundles `index.ts` into `index.js`, and prepares fingerprinted deploy artifacts in `build/`
 - `npm run lint` — runs ESLint plus HTMLHint on `index.html`
 - `npm test` — rebuilds and runs the Node test suite
 - `npm run format` / `npm run format:check` — Prettier
@@ -68,7 +69,7 @@ For most feature work:
 1. Change `command-builder.ts` first if behavior or defaults change.
 2. Update `index.html` if the UI surface changes.
 3. Update `index.ts` only if DOM behavior changes.
-4. Regenerate build artifacts with `npm run build`.
+4. Regenerate build artifacts with `npm run build`; this also refreshes `build/index.html` and the hashed browser bundle used by uploads.
 5. Update or add tests in `command-builder.test.js`.
 
 ## Things to avoid

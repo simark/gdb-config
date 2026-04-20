@@ -23,6 +23,9 @@ Build the TypeScript sources:
 npm run build
 ```
 
+This also prepares deploy artifacts in `build/`, including a fingerprinted
+browser bundle so uploads get a new JS URL when the app changes.
+
 Run linting:
 
 ```sh
@@ -40,6 +43,9 @@ Build and upload the static files:
 ```sh
 npm run upload
 ```
+
+The uploaded `index.html` references a content-hashed bundle name like
+`index.<hash>.js`, which avoids browsers reusing a stale cached script.
 
 ## Usage
 

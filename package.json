@@ -5,12 +5,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --pretty false && esbuild index.ts --bundle --format=iife --platform=browser --outfile=index.js",
+    "build": "tsc --pretty false && esbuild index.ts --bundle --format=iife --platform=browser --outfile=index.js && node scripts/prepare-deploy.mjs",
     "lint": "npm run lint:js && npm run lint:html",
     "lint:js": "eslint .",
     "lint:html": "htmlhint index.html",
     "test": "npm run build && node --test",
-    "upload": "npm run build && scp index.html index.js simark.ca:/var/www/html/simark/gdb-config",
+    "upload": "npm run build && scp build/index.html build/index.*.js simark.ca:/var/www/html/simark/gdb-config",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
