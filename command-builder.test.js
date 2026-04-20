@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildConfigureCommand, createPresetInputs } from "./command-builder.js";
+import {
+  buildConfigureCommand,
+  createPresetInputs,
+  mergeInputs,
+  parseSerializedInputs,
+  serializeInputs,
+} from "./command-builder.js";
 
 function createDefaultInputs() {
   return createPresetInputs("debug-all-targets");
@@ -92,4 +98,51 @@ test("perf preset enables optimization and disables sanitizers", () => {
   assert.doesNotMatch(command, /-fsanitize=address/);
   assert.doesNotMatch(command, /--enable-ubsan/);
   assert.doesNotMatch(command, /_GLIBCXX_DEBUG/);
+});
+
+test("serializeInputs round-trips permalink state", () => {
+  const inputs = createDefaultInputs();
+  inputs.values.configure = "~/src/it has spaces";
+  inputs.values["additional-cflags"] = "-DMESSAGE=hello";
+  inputs.checked["use-ccache"] = false;
+  inputs.checked.optimized = true;
+
+  assert.deepEqual(parseSerializedInputs(serializeInputs(inputs)), inputs);
+});
+
+test("parseSerializedInputs rejects invalid permalink payloads", () => {
+  assert.throws(() => parseSerializedInputs("not json"));
+  assert.throws(
+    () =>
+      parseSerializedInputs(
+        JSON.stringify({
+          values: { configure: 42 },
+          checked: { "use-ccache": true },
+        }),
+      ),
+    /Invalid permalink values/,
+  );
+  assert.throws(
+    () =>
+      parseSerializedInputs(
+        JSON.stringify({
+          values: { configure: "~/src/binutils-gdb/configure" },
+          checked: { "use-ccache": "yes" },
+        }),
+      ),
+    /Invalid permalink options/,
+  );
+});
+
+test("mergeInputs preserves defaults for missing permalink fields", () => {
+  const defaults = createDefaultInputs();
+  const merged = mergeInputs(defaults, {
+    values: { target: "riscv64-elf" },
+    checked: { optimized: true },
+  });
+
+  assert.equal(merged.values.target, "riscv64-elf");
+  assert.equal(merged.checked.optimized, true);
+  assert.equal(merged.values.cc, defaults.values.cc);
+  assert.equal(merged.checked["use-ccache"], defaults.checked["use-ccache"]);
 });

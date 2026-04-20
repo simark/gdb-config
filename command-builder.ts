@@ -184,6 +184,91 @@ export function createPresetInputs(
   return inputs;
 }
 
+function sortRecord<T>(record: Record<string, T>): Record<string, T> {
+  const sorted: Record<string, T> = {};
+  for (const key of Object.keys(record).sort()) {
+    sorted[key] = record[key];
+  }
+
+  return sorted;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readStringRecord(
+  value: unknown,
+  errorMessage: string,
+): Record<string, string> {
+  if (!isRecord(value)) {
+    throw new Error(errorMessage);
+  }
+
+  const result: Record<string, string> = {};
+  for (const key of Object.keys(value)) {
+    const recordValue = value[key];
+    if (typeof recordValue !== "string") {
+      throw new Error(errorMessage);
+    }
+
+    result[key] = recordValue;
+  }
+
+  return result;
+}
+
+function readBooleanRecord(
+  value: unknown,
+  errorMessage: string,
+): Record<string, boolean> {
+  if (!isRecord(value)) {
+    throw new Error(errorMessage);
+  }
+
+  const result: Record<string, boolean> = {};
+  for (const key of Object.keys(value)) {
+    const recordValue = value[key];
+    if (typeof recordValue !== "boolean") {
+      throw new Error(errorMessage);
+    }
+
+    result[key] = recordValue;
+  }
+
+  return result;
+}
+
+export function mergeInputs(
+  base: CommandBuilderInputs,
+  overrides: CommandBuilderInputs,
+): CommandBuilderInputs {
+  return {
+    values: { ...base.values, ...overrides.values },
+    checked: { ...base.checked, ...overrides.checked },
+  };
+}
+
+export function serializeInputs(inputs: CommandBuilderInputs): string {
+  return JSON.stringify({
+    values: sortRecord(inputs.values),
+    checked: sortRecord(inputs.checked),
+  });
+}
+
+export function parseSerializedInputs(serialized: string): CommandBuilderInputs {
+  const parsed = JSON.parse(serialized) as unknown;
+
+  if (!isRecord(parsed)) {
+    throw new Error("Invalid permalink config.");
+  }
+
+  return {
+    values: readStringRecord(parsed.values, "Invalid permalink values."),
+    checked: readBooleanRecord(parsed.checked, "Invalid permalink options."),
+  };
+}
+
 function getInputValue(inputs: CommandBuilderInputs, id: string): string {
   return inputs.values[id] ?? "";
 }

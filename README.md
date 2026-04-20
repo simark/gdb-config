@@ -46,3 +46,5 @@ npm run upload
 After building, open `index.html` in a browser.
 
 Adjust the form fields and copy the generated command from the output textarea.
+The browser URL updates to restore the current configuration, and the page can
+copy that permalink for you.
