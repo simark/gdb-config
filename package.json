@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --pretty false && esbuild index.ts --bundle --format=iife --platform=browser --outfile=index.js && node scripts/prepare-deploy.mjs",
+    "build": "tsc --pretty false && esbuild index.ts --bundle --format=iife --platform=browser --target=firefox140 --outfile=index.js && node scripts/prepare-deploy.mjs",
     "lint": "npm run lint:js && npm run lint:html",
     "lint:js": "eslint .",
     "lint:html": "htmlhint index.html",

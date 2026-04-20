@@ -4,14 +4,14 @@ import tseslint from "typescript-eslint";
 
 export default [
   {
-    ignores: ["index.js", "node_modules/"],
+    ignores: ["build/", "index.js", "node_modules/"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
     files: ["**/*.ts"],
     languageOptions: {
-      ecmaVersion: 2015,
+      ecmaVersion: 2022,
       sourceType: "script",
       globals: globals.browser,
     },

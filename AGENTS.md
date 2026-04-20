@@ -48,6 +48,7 @@ For code changes, run `npm run lint` and `npm test` before finishing.
 ## Working conventions
 
 - Keep the app dependency-light and framework-free; the current structure is plain HTML + TypeScript.
+- Browser-side code can assume modern, bleeding-edge browser support (roughly Firefox 140 class), so compatibility fallbacks for old browsers are usually unnecessary.
 - Preserve shell-safe quoting behavior in `command-builder.ts`; it is a core feature, not an implementation detail.
 - Favor adding or adjusting tests when changing presets, quoting, flag ordering, or option handling.
 - Keep output stable unless the behavior change is intentional; tests assert concrete command strings and regex patterns.

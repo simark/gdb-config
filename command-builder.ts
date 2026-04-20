@@ -206,8 +206,7 @@ function readStringRecord(
   }
 
   const result: Record<string, string> = {};
-  for (const key of Object.keys(value)) {
-    const recordValue = value[key];
+  for (const [key, recordValue] of Object.entries(value)) {
     if (typeof recordValue !== "string") {
       throw new Error(errorMessage);
     }
@@ -227,8 +226,7 @@ function readBooleanRecord(
   }
 
   const result: Record<string, boolean> = {};
-  for (const key of Object.keys(value)) {
-    const recordValue = value[key];
+  for (const [key, recordValue] of Object.entries(value)) {
     if (typeof recordValue !== "boolean") {
       throw new Error(errorMessage);
     }
@@ -299,11 +297,7 @@ function getCheckedOptionValue(
 }
 
 function trimLeadingSpace(val: string): string {
-  while (val.charAt(0) === " ") {
-    val = val.substring(1);
-  }
-
-  return val;
+  return val.trimStart();
 }
 
 function shellQuote(val: string): string {
